@@ -16,7 +16,7 @@ class Lescript
     // public $contact = array("mailto:cert-admin@example.com", "tel:+12025551212")
 
     public $clientUserAgent = "analogic-lescript/0.3.0";
-    
+
     protected $certificatesDir;
     protected $webRootDir;
 
@@ -130,7 +130,7 @@ class Lescript
             $tokenPath = $directory . '/' . $challenge['token'];
 
             if (!file_exists($directory) && !@mkdir($directory, 0755, true)) {
-                throw new RuntimeException("Couldn't create directory to expose challenge: ${tokenPath}");
+                throw new RuntimeException(sprintf("Couldn't create directory to expose challenge: %s", $tokenPath));
             }
 
             $header = array(
@@ -148,7 +148,7 @@ class Lescript
             // 3. verification process itself
             // -------------------------------
 
-            $uri = "http://${domain}/.well-known/acme-challenge/${challenge['token']}";
+            $uri = sprintf("http://%s/.well-known/acme-challenge/%s", $domain, $challenge['token']);
 
             $this->log("Token for $domain saved at $tokenPath and should be available at $uri");
             $this->log("Sending request to challenge");
@@ -183,7 +183,7 @@ class Lescript
                 throw new RuntimeException("Verification timed out");
             }
 
-            $this->log("Verification ended with status: ${result['status']}");
+            $this->log(sprintf("Verification ended with status: %s", $result['status']));
 
             @unlink($tokenPath);
         }
